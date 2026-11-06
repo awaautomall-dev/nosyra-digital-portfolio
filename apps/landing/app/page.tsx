@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Boxes, Workflow, UsersRound } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Boxes, ShieldCheck, Workflow, UsersRound } from "lucide-react";
 
 const workspaces = [
   {
@@ -8,6 +8,7 @@ const workspaces = [
     title: "Nosyra CRM",
     category: "Customer relationships",
     description: "Keep every customer conversation, lead, and next step moving together.",
+    details: ["Lead pipeline and customer records", "Follow-up reminders and ownership", "Activity reports and exports"],
     href: "/crm",
     icon: UsersRound,
     tone: "navy",
@@ -17,6 +18,7 @@ const workspaces = [
     title: "Nosyra Inventory",
     category: "Products and stock",
     description: "Stay ahead of stock, purchasing, suppliers, and warehouse activity.",
+    details: ["Product catalogue and stock levels", "Supplier and purchase-order tracking", "Stock movement and reports"],
     href: "/inventory",
     icon: Boxes,
     tone: "teal",
@@ -26,6 +28,7 @@ const workspaces = [
     title: "Nosyra ProjectFlow",
     category: "Projects and teams",
     description: "Bring projects, tasks, milestones, and people into one clear view.",
+    details: ["Project plans and milestones", "Task and team coordination", "Workforce, costs, and client portal"],
     href: "/projectflow",
     icon: Workflow,
     tone: "mist",
@@ -37,7 +40,7 @@ export default function Home() {
     <main className="site-shell">
       <header className="topbar">
         <Link className="brand" href="/" aria-label="Nosyra Digital home">
-          <Image src="/nosyra-logo.png" alt="Nosyra Digital" width={178} height={56} priority />
+          <Image src="/nosyra-logo.png" alt="Nosyra Digital" width={178} height={56} priority unoptimized />
         </Link>
         <a className="company-link" href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">
           <span>Visit Nosyra Digital</span>
@@ -62,7 +65,7 @@ export default function Home() {
           <div className="orbit orbit-two" />
           <div className="orbit orbit-three" />
           <div className="art-center">
-            <Image src="/nosyra-logo.png" alt="" width={162} height={51} />
+            <Image src="/nosyra-logo.png" alt="" width={162} height={51} unoptimized />
             <span>Business, in better view.</span>
           </div>
           <div className="orbit-node node-crm"><UsersRound size={19} /></div>
@@ -81,7 +84,7 @@ export default function Home() {
         </div>
 
         <div className="workspace-grid">
-          {workspaces.map(({ number, title, category, description, href, icon: Icon, tone }) => (
+          {workspaces.map(({ number, title, category, description, details, href, icon: Icon, tone }) => (
             <Link className={`workspace-card ${tone}`} href={href} key={href}>
               <div className="card-topline">
                 <span className="card-icon"><Icon size={21} aria-hidden="true" /></span>
@@ -90,9 +93,16 @@ export default function Home() {
               <p className="card-category">{category}</p>
               <h3>{title}</h3>
               <p className="card-description">{description}</p>
+              <ul className="card-details">
+                {details.map((detail) => <li key={detail}>{detail}</li>)}
+              </ul>
               <span className="card-link">Open workspace <ArrowRight size={16} aria-hidden="true" /></span>
             </Link>
           ))}
+        </div>
+        <div className="suite-note">
+          <span className="suite-note-icon"><ShieldCheck size={18} aria-hidden="true" /></span>
+          <p><strong>Demo environment</strong><span>Explore the sample records; changes are saved locally in this browser.</span></p>
         </div>
       </section>
 

@@ -11,6 +11,8 @@ The landing page and each app are separate deployables. Each app owns its own pa
 
 All four services share Nosyra navy and teal. The workspace apps use a white wordmark on dark surfaces and the original logo on light surfaces. On mobile, each workspace shows four icon tabs—Dashboard, the main module, Reports, and More—with secondary pages grouped under More.
 
+Each sign-in screen and authenticated workspace provides an **All workspaces** return link. The profile menu shows the demo identity and current workspace, with shortcuts to workspace settings and log out.
+
 ## Run locally
 
 ```bash

@@ -3,6 +3,7 @@
 ## Current request
 
 - [x] Create a branded landing page at `/` with links to the CRM (`/crm`), Inventory (`/inventory`), and ProjectFlow (`/projectflow`) workspaces. Use the shared Nosyra navy/teal team colors across all four services, show a white logo on dark surfaces and the original logo on light surfaces, and provide a mobile bottom bar with four icon tabs (Dashboard, the main module, Reports, and More) so remaining pages are available under More. All four production builds pass.
+- [x] Ensure the landing-page logo loads on the deployed Vercel service, add return links on sign-in and workspace screens, provide a profile menu with account and workspace details plus settings/logout, and add clearer feature details to the landing cards. All four builds pass; browser checks verified the direct logo paths, sign-in return link, profile-menu details, and logout returning to sign-in.
 
 ## Completed in this testing build
 

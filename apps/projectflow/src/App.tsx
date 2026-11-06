@@ -3,6 +3,7 @@
 import {
   Activity,
   ArrowDownToLine,
+  ArrowLeft,
   ArrowRight,
   ArrowUpFromLine,
   BarChart3,
@@ -35,7 +36,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 type RecordItem = {
   id: number;
@@ -341,6 +342,8 @@ export default function App() {
   const [settings, setSettings] = useState(loadSettings);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [toast, setToast] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -366,6 +369,22 @@ export default function App() {
     document.documentElement.style.setProperty("--custom-primary", settings.primary);
     document.documentElement.style.setProperty("--custom-secondary", settings.secondary);
   }, [settings]);
+
+  useEffect(() => {
+    if (!profileOpen) return;
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (event.target instanceof Node && !profileMenuRef.current?.contains(event.target)) setProfileOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setProfileOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsidePointer);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePointer);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [profileOpen]);
 
   useEffect(() => {
     if (!toast) return;
@@ -466,6 +485,7 @@ export default function App() {
           <img className="brand-logo" src="/projectflow/nosyra-logo-white.png" alt="Nosyra Digital logo" />
           <div className="brand-product"><strong>{config.product}</strong><a href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">Websites that convert</a></div>
         </div>
+        <a className="suite-home-link" href="/" aria-label="Back to all workspaces"><ArrowLeft size={14} aria-hidden="true" /><span>All workspaces</span></a>
         <div className="workspace-switcher"><span className="status-dot" />{settings.companyName}<ChevronDown size={15} /></div>
         <nav className="primary-nav">
           <div className="nav-label">Workspace</div>
@@ -481,8 +501,18 @@ export default function App() {
       <main className="main-panel">
         <header className="topbar">
           <button className="mobile-menu icon-button" onClick={() => setMobileOpen((open) => !open)} aria-label="Open navigation"><Menu size={20} /></button>
+          <a className="suite-home-mobile" href="/" aria-label="Back to all workspaces"><ArrowLeft size={16} aria-hidden="true" /><span>All tools</span></a>
           <div className="breadcrumbs"><span>{config.product}</span><ArrowRight size={14} /><strong>{activeNav.label}</strong></div>
-          <div className="topbar-actions"><div className="global-search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${config.resourceLabel.toLowerCase()}...`} /></div><button className="icon-button notification-button" onClick={() => setToast("No new notifications in this demo workspace")} aria-label="Notifications"><Bell size={18} /><i /></button><button className="avatar avatar-small">{config.demos[0].name.split(" ").map((word) => word[0]).join("")}</button></div>
+          <div className="topbar-actions"><div className="global-search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${config.resourceLabel.toLowerCase()}...`} /></div><button className="icon-button notification-button" onClick={() => setToast("No new notifications in this demo workspace")} aria-label="Notifications"><Bell size={18} /><i /></button><div className="profile-menu-wrap" ref={profileMenuRef}>
+            <button type="button" className="avatar avatar-small profile-trigger" aria-label="Open profile menu" aria-haspopup="menu" aria-expanded={profileOpen} aria-controls="profile-menu" onClick={() => setProfileOpen((open) => !open)}>{config.demos[0].name.split(" ").map((word) => word[0]).join("")}</button>
+            {profileOpen && <div className="profile-menu" id="profile-menu" role="menu">
+              <div className="profile-menu-heading"><span>Signed in as</span><strong>{config.demos[0].name}</strong><small>{config.demos[0].email} · {config.demos[0].role}</small></div>
+              <div className="profile-menu-workspace"><span>Current workspace</span><strong>{settings.companyName}</strong><small>{config.product}</small></div>
+              <a href="/" className="profile-menu-item" role="menuitem" onClick={() => setProfileOpen(false)}><ArrowLeft size={15} aria-hidden="true" />All workspaces</a>
+              <button type="button" className="profile-menu-item" role="menuitem" onClick={() => { setProfileOpen(false); navigate("settings"); }}><Settings2 size={15} aria-hidden="true" />Workspace settings</button>
+              <button type="button" className="profile-menu-item profile-menu-logout" role="menuitem" onClick={() => { setProfileOpen(false); logout(); }}><LogOut size={15} aria-hidden="true" />Log out</button>
+            </div>}
+          </div></div>
         </header>
         <div className="page-content">
           {currentView === "dashboard" && <Dashboard records={records} onNavigate={navigate} onCreate={openCreate} />}
@@ -527,7 +557,7 @@ export default function App() {
 function Login({ onLogin }: { onLogin: (role?: string) => void }) {
   const [email, setEmail] = useState(config.demos[0].email);
   const [password, setPassword] = useState("demo-password");
-  return <div className="login-shell"><div className="login-art"><div className="login-art-top"><img className="login-brand-logo" src="/projectflow/nosyra-logo-white.png" alt="Nosyra Digital logo" /><a className="login-brand-link" href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">nosyradigital.com.ng</a></div><div className="art-copy"><p className="eyebrow">{config.eyebrow}</p><h1>{config.tagline}</h1><p>One focused workspace for teams who want the next action to be obvious.</p></div><div className="art-stat"><span>Demo environment</span><strong>{config.company}</strong><small>Fictional records · safe for client walkthroughs</small></div></div><div className="login-panel"><div className="login-card"><p className="eyebrow">Secure workspace access</p><h2>Sign in to {config.product}</h2><p className="muted">Use a demo identity below to explore the product.</p><form onSubmit={(event) => { event.preventDefault(); onLogin("Demo administrator"); }}><label>Work email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label><button className="primary-button full-width" type="submit">Enter demo workspace <ArrowRight size={16} /></button></form><div className="demo-access"><div className="section-kicker"><span>Demo access</span><span className="mini-badge">No real data</span></div>{config.demos.map((demo) => <button className="demo-row" key={demo.role} onClick={() => { setEmail(demo.email); onLogin(demo.role); }}><div className="avatar">{demo.name.split(" ").map((word) => word[0]).join("")}</div><div><strong>{demo.role}</strong><span>{demo.name} · {demo.email}</span></div><ArrowRight size={15} /></button>)}</div><p className="login-footnote">Testing build: changes are stored in this browser only.</p></div></div></div>;
+  return <div className="login-shell"><div className="login-art"><div className="login-art-top"><img className="login-brand-logo" src="/projectflow/nosyra-logo-white.png" alt="Nosyra Digital logo" /><a className="login-brand-link" href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">nosyradigital.com.ng</a></div><a className="login-home-link" href="/" aria-label="Back to all workspaces"><ArrowLeft size={15} aria-hidden="true" />All workspaces</a><div className="art-copy"><p className="eyebrow">{config.eyebrow}</p><h1>{config.tagline}</h1><p>One focused workspace for teams who want the next action to be obvious.</p></div><div className="art-stat"><span>Demo environment</span><strong>{config.company}</strong><small>Fictional records · safe for client walkthroughs</small></div></div><div className="login-panel"><div className="login-card"><p className="eyebrow">Secure workspace access</p><h2>Sign in to {config.product}</h2><p className="muted">Use a demo identity below to explore the product.</p><form onSubmit={(event) => { event.preventDefault(); onLogin("Demo administrator"); }}><label>Work email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label><button className="primary-button full-width" type="submit">Enter demo workspace <ArrowRight size={16} /></button></form><div className="demo-access"><div className="section-kicker"><span>Demo access</span><span className="mini-badge">No real data</span></div>{config.demos.map((demo) => <button className="demo-row" key={demo.role} onClick={() => { setEmail(demo.email); onLogin(demo.role); }}><div className="avatar">{demo.name.split(" ").map((word) => word[0]).join("")}</div><div><strong>{demo.role}</strong><span>{demo.name} · {demo.email}</span></div><ArrowRight size={15} /></button>)}</div><p className="login-footnote">Testing build: changes are stored in this browser only.</p></div></div></div>;
 }
 
 function PageHeader({ eyebrow, title, copy, action, onAction }: { eyebrow: string; title: string; copy: string; action?: string; onAction?: () => void }) {
