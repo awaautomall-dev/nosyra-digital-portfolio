@@ -1,0 +1,40 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Nosyra Inventory"
+    },
+    {
+      "path": "/login",
+      "title": "Nosyra Inventory Login"
+    },
+    {
+      "path": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "path": "/records",
+      "title": "Products"
+    },
+    {
+      "path": "/stock",
+      "title": "Stock movement"
+    },
+    {
+      "path": "/suppliers",
+      "title": "Suppliers"
+    },
+    {
+      "path": "/purchases",
+      "title": "Purchase orders"
+    },
+    {
+      "path": "/reports",
+      "title": "Reports"
+    },
+    {
+      "path": "/settings",
+      "title": "Settings"
+    }
+  ]
+}

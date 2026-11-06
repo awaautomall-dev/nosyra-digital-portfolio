@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Nosyra CRM API
+  version: 0.1.0
+  description: Production API starting point for the independent Nosyra CRM deployment.
+servers:
+  - url: https://api.example.com
+paths:
+  /auth/login:
+    post:
+      summary: Start a secure session
+      responses:
+        '200': {description: Session started}
+        '401': {description: Invalid credentials}
+  /dashboard/summary:
+    get:
+      summary: Return database-backed dashboard metrics
+      responses:
+        '200': {description: Summary returned}
+  /records:
+    get:
+      summary: List records with pagination, filtering, and sorting
+      responses:
+        '200': {description: Records returned}
+    post:
+      summary: Create a record after server-side validation
+      responses:
+        '201': {description: Record created}
+  /records/{id}:
+    patch:
+      summary: Update an authorized record
+      responses:
+        '200': {description: Record updated}
+    delete:
+      summary: Delete an authorized record
+      responses:
+        '204': {description: Record deleted}

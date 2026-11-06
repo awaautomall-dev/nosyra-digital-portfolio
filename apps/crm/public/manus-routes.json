@@ -1,0 +1,40 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Nosyra CRM"
+    },
+    {
+      "path": "/login",
+      "title": "Nosyra CRM Login"
+    },
+    {
+      "path": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "path": "/records",
+      "title": "Leads"
+    },
+    {
+      "path": "/pipeline",
+      "title": "Sales pipeline"
+    },
+    {
+      "path": "/customers",
+      "title": "Customers"
+    },
+    {
+      "path": "/followups",
+      "title": "Follow-ups"
+    },
+    {
+      "path": "/reports",
+      "title": "Reports"
+    },
+    {
+      "path": "/settings",
+      "title": "Settings"
+    }
+  ]
+}

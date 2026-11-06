@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Nosyra ProjectFlow"
+    },
+    {
+      "path": "/login",
+      "title": "Nosyra ProjectFlow Login"
+    },
+    {
+      "path": "/dashboard",
+      "title": "Dashboard"
+    },
+    {
+      "path": "/records",
+      "title": "Projects"
+    },
+    {
+      "path": "/tasks",
+      "title": "Tasks"
+    },
+    {
+      "path": "/workforce",
+      "title": "Workforce"
+    },
+    {
+      "path": "/expenses",
+      "title": "Expenses"
+    },
+    {
+      "path": "/portal",
+      "title": "Client portal"
+    },
+    {
+      "path": "/reports",
+      "title": "Reports"
+    },
+    {
+      "path": "/settings",
+      "title": "Settings"
+    }
+  ]
+}
