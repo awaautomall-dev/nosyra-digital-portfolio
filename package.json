@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "build:landing": "npm --prefix apps/landing run build",
     "build:crm": "npm --prefix apps/crm run build",
     "build:inventory": "npm --prefix apps/inventory run build",
     "build:projectflow": "npm --prefix apps/projectflow run build",
-    "build": "npm run build:crm && npm run build:inventory && npm run build:projectflow"
+    "build": "npm run build:landing && npm run build:crm && npm run build:inventory && npm run build:projectflow"
   }
 }

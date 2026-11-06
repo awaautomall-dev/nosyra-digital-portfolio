@@ -295,12 +295,21 @@ function loadRecords(): RecordItem[] {
 }
 
 function loadSettings() {
-  if (typeof window === "undefined") return { companyName: config.company, primary: "#__PRIMARY__", secondary: "#__SECONDARY__", contact: "hello@nosyradigital.com" };
+  const defaults = { companyName: config.company, primary: "#0b1d3a", secondary: "#1ca6b5", contact: "hello@nosyradigital.com" };
+  if (typeof window === "undefined") return defaults;
   try {
     const stored = localStorage.getItem(settingsKey);
-    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#153b35", secondary: "#d49b45", contact: "hello@nosyradigital.com" };
+    if (!stored) return defaults;
+    const saved = JSON.parse(stored) as Partial<typeof defaults> | null;
+    if (!saved || typeof saved !== "object") return defaults;
+    return {
+      ...defaults,
+      ...saved,
+      primary: !saved.primary || saved.primary === "#153b35" ? defaults.primary : saved.primary,
+      secondary: !saved.secondary || saved.secondary === "#d49b45" ? defaults.secondary : saved.secondary,
+    };
   } catch {
-    return { companyName: config.company, primary: "#153b35", secondary: "#d49b45", contact: "hello@nosyradigital.com" };
+    return defaults;
   }
 }
 
@@ -324,6 +333,7 @@ export default function App() {
   const [records, setRecords] = useState<RecordItem[]>(loadRecords);
   const [settings, setSettings] = useState(loadSettings);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [toast, setToast] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -436,6 +446,8 @@ export default function App() {
   }
 
   const activeNav = config.nav.find((item) => item.view === currentView) ?? config.nav[0];
+  const mobilePrimaryNav = config.nav.filter((item) => ["dashboard", "records", "reports"].includes(item.view));
+  const mobileMoreNav = config.nav.filter((item) => !mobilePrimaryNav.some((primary) => primary.view === item.view));
   const filteredRecords = useMemo(() => records.filter((item) => `${item.name} ${item.meta} ${item.owner} ${item.tag}`.toLowerCase().includes(query.toLowerCase())), [records, query]);
 
   if (!loggedIn) return <Login onLogin={login} />;
@@ -444,7 +456,7 @@ export default function App() {
     <div className="app-shell">
       <aside className={`sidebar ${mobileOpen ? "is-open" : ""}`}>
         <div className="brand-lockup">
-          <img className="brand-logo" src="/inventory/nosyra-logo.png" alt="Nosyra Digital logo" />
+          <img className="brand-logo" src="/inventory/nosyra-logo-white.png" alt="Nosyra Digital logo" />
           <div className="brand-product"><strong>{config.product}</strong><a href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">Websites that convert</a></div>
         </div>
         <div className="workspace-switcher"><span className="status-dot" />{settings.companyName}<ChevronDown size={15} /></div>
@@ -476,6 +488,29 @@ export default function App() {
           {currentView === "followups" && <Followups records={filteredRecords} onCreate={openCreate} />}
         </div>
       </main>
+      {moreOpen && (
+        <>
+          <button className="mobile-more-backdrop" type="button" aria-label="Close More menu" onClick={() => setMoreOpen(false)} />
+          <div className="mobile-more-menu" id="mobile-more-menu" aria-label="More pages">
+            <div className="mobile-more-title">More pages</div>
+            {mobileMoreNav.map((item) => (
+              <button key={item.view} type="button" className={currentView === item.view ? "mobile-more-item active" : "mobile-more-item"} onClick={() => { navigate(item.view); setMoreOpen(false); }}>
+                {iconMap[item.icon]}<span>{item.label}</span><ArrowRight size={14} aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+      <nav className="mobile-tabs" aria-label="Mobile workspace navigation">
+        {mobilePrimaryNav.map((item) => (
+          <button key={item.view} type="button" className={currentView === item.view ? "mobile-tab active" : "mobile-tab"} aria-current={currentView === item.view ? "page" : undefined} onClick={() => { navigate(item.view); setMoreOpen(false); }}>
+            {iconMap[item.icon]}<span>{item.label}</span>
+          </button>
+        ))}
+        <button type="button" className={moreOpen || mobileMoreNav.some((item) => item.view === currentView) ? "mobile-tab active" : "mobile-tab"} aria-expanded={moreOpen} aria-controls="mobile-more-menu" onClick={() => setMoreOpen((open) => !open)}>
+          <Menu size={18} aria-hidden="true" /><span>More</span>
+        </button>
+      </nav>
       {toast && <div className="toast"><Check size={16} />{toast}</div>}
       {modalOpen && <RecordModal editing={editing} draft={draft} setDraft={setDraft} onClose={() => setModalOpen(false)} onSave={saveRecord} />}
     </div>
@@ -485,7 +520,7 @@ export default function App() {
 function Login({ onLogin }: { onLogin: (role?: string) => void }) {
   const [email, setEmail] = useState(config.demos[0].email);
   const [password, setPassword] = useState("demo-password");
-  return <div className="login-shell"><div className="login-art"><div className="login-art-top"><img className="login-brand-logo" src="/inventory/nosyra-logo.png" alt="Nosyra Digital logo" /><a className="login-brand-link" href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">nosyradigital.com.ng</a></div><div className="art-copy"><p className="eyebrow">{config.eyebrow}</p><h1>{config.tagline}</h1><p>One focused workspace for teams who want the next action to be obvious.</p></div><div className="art-stat"><span>Demo environment</span><strong>{config.company}</strong><small>Fictional records · safe for client walkthroughs</small></div></div><div className="login-panel"><div className="login-card"><p className="eyebrow">Secure workspace access</p><h2>Sign in to {config.product}</h2><p className="muted">Use a demo identity below to explore the product.</p><form onSubmit={(event) => { event.preventDefault(); onLogin("Demo administrator"); }}><label>Work email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label><button className="primary-button full-width" type="submit">Enter demo workspace <ArrowRight size={16} /></button></form><div className="demo-access"><div className="section-kicker"><span>Demo access</span><span className="mini-badge">No real data</span></div>{config.demos.map((demo) => <button className="demo-row" key={demo.role} onClick={() => { setEmail(demo.email); onLogin(demo.role); }}><div className="avatar">{demo.name.split(" ").map((word) => word[0]).join("")}</div><div><strong>{demo.role}</strong><span>{demo.name} · {demo.email}</span></div><ArrowRight size={15} /></button>)}</div><p className="login-footnote">Testing build: changes are stored in this browser only.</p></div></div></div>;
+  return <div className="login-shell"><div className="login-art"><div className="login-art-top"><img className="login-brand-logo" src="/inventory/nosyra-logo-white.png" alt="Nosyra Digital logo" /><a className="login-brand-link" href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">nosyradigital.com.ng</a></div><div className="art-copy"><p className="eyebrow">{config.eyebrow}</p><h1>{config.tagline}</h1><p>One focused workspace for teams who want the next action to be obvious.</p></div><div className="art-stat"><span>Demo environment</span><strong>{config.company}</strong><small>Fictional records · safe for client walkthroughs</small></div></div><div className="login-panel"><div className="login-card"><p className="eyebrow">Secure workspace access</p><h2>Sign in to {config.product}</h2><p className="muted">Use a demo identity below to explore the product.</p><form onSubmit={(event) => { event.preventDefault(); onLogin("Demo administrator"); }}><label>Work email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label><button className="primary-button full-width" type="submit">Enter demo workspace <ArrowRight size={16} /></button></form><div className="demo-access"><div className="section-kicker"><span>Demo access</span><span className="mini-badge">No real data</span></div>{config.demos.map((demo) => <button className="demo-row" key={demo.role} onClick={() => { setEmail(demo.email); onLogin(demo.role); }}><div className="avatar">{demo.name.split(" ").map((word) => word[0]).join("")}</div><div><strong>{demo.role}</strong><span>{demo.name} · {demo.email}</span></div><ArrowRight size={15} /></button>)}</div><p className="login-footnote">Testing build: changes are stored in this browser only.</p></div></div></div>;
 }
 
 function PageHeader({ eyebrow, title, copy, action, onAction }: { eyebrow: string; title: string; copy: string; action?: string; onAction?: () => void }) {
