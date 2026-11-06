@@ -1,4 +1,5 @@
-import { createRoot } from "react-dom/client";
+"use client";
+
 import {
   Activity,
   ArrowDownToLine,
@@ -35,7 +36,6 @@ import {
   X,
 } from "lucide-react";
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
-import "./styles.css";
 
 type RecordItem = {
   id: number;
@@ -73,13 +73,13 @@ type AppConfig = {
 };
 
 const config: AppConfig = {
-  "slug": "crm",
-  "product": "Nosyra CRM",
-  "eyebrow": "Customer relationship management",
-  "tagline": "Move every relationship forward.",
-  "company": "Apexline Advisory",
-  "resourceLabel": "Leads & customers",
-  "singularLabel": "lead",
+  "slug": "inventory",
+  "product": "Nosyra Inventory",
+  "eyebrow": "Inventory & warehouse operations",
+  "tagline": "Protect stock. Keep trade moving.",
+  "company": "Harbourline Distribution",
+  "resourceLabel": "Products & stock",
+  "singularLabel": "product",
   "nav": [
     {
       "label": "Dashboard",
@@ -87,24 +87,24 @@ const config: AppConfig = {
       "icon": "dashboard"
     },
     {
-      "label": "Leads",
+      "label": "Products",
       "view": "records",
       "icon": "records"
     },
     {
-      "label": "Sales pipeline",
-      "view": "pipeline",
-      "icon": "pipeline"
+      "label": "Stock movement",
+      "view": "stock",
+      "icon": "stock"
     },
     {
-      "label": "Customers",
-      "view": "customers",
-      "icon": "records"
+      "label": "Suppliers",
+      "view": "suppliers",
+      "icon": "suppliers"
     },
     {
-      "label": "Follow-ups",
-      "view": "followups",
-      "icon": "followups"
+      "label": "Purchase orders",
+      "view": "purchases",
+      "icon": "purchases"
     },
     {
       "label": "Reports",
@@ -119,151 +119,148 @@ const config: AppConfig = {
   ],
   "metrics": [
     {
-      "label": "Total leads",
-      "value": "248",
-      "delta": "12.6%",
+      "label": "Total products",
+      "value": "1,284",
+      "delta": "4.2%",
       "tone": "neutral"
     },
     {
-      "label": "Pipeline value",
-      "value": "\u20a642.8m",
-      "delta": "18.4%",
+      "label": "Stock value",
+      "value": "\u20a668.4m",
+      "delta": "9.8%",
       "tone": "primary"
     },
     {
-      "label": "Won this month",
-      "value": "19",
-      "delta": "8.9%",
+      "label": "Low-stock items",
+      "value": "36",
+      "delta": "3.1%",
       "tone": "neutral"
     },
     {
-      "label": "Follow-ups due",
-      "value": "14",
-      "delta": "5.2%",
+      "label": "Open POs",
+      "value": "18",
+      "delta": "6.4%",
       "tone": "neutral"
     }
   ],
   "pipeline": [
-    "New",
-    "Contacted",
-    "Qualified",
-    "Proposal Sent",
-    "Negotiation",
-    "Won",
-    "Lost"
+    "In stock",
+    "Low stock",
+    "Out of stock"
   ],
   "seed": [
     {
-      "id": 101,
-      "name": "Aderonke Properties",
-      "meta": "Real estate partnership",
-      "status": "Qualified",
-      "tag": "Referral",
-      "value": 18500000,
-      "secondary": "Lagos",
-      "priority": "High",
-      "owner": "Amara Dike"
-    },
-    {
-      "id": 102,
-      "name": "Kora Buildworks",
-      "meta": "Construction retainer",
-      "status": "Proposal Sent",
-      "tag": "Website",
-      "value": 12400000,
-      "secondary": "Due in 2d",
-      "priority": "High",
-      "owner": "Tomi Adeyemi"
-    },
-    {
-      "id": 103,
-      "name": "Northwind Studio",
-      "meta": "Brand transformation",
-      "status": "New",
-      "tag": "LinkedIn",
-      "value": 7200000,
-      "secondary": "Last touched 1h",
-      "priority": "Medium",
-      "owner": "Amara Dike"
-    },
-    {
-      "id": 104,
-      "name": "Mile 7 Advisory",
-      "meta": "Quarterly consulting",
-      "status": "Won",
-      "tag": "Partner",
-      "value": 8900000,
-      "secondary": "Closed Oct 30",
+      "id": 201,
+      "name": "14mm Reinforcement Bar",
+      "meta": "SKU RBR-014 \u00b7 Steel",
+      "status": "In stock",
+      "tag": "Construction",
+      "value": 380,
+      "secondary": "380 units",
       "priority": "Low",
-      "owner": "Femi Okafor"
+      "owner": "Warehouse A"
     },
     {
-      "id": 105,
-      "name": "Sable & Co.",
-      "meta": "Digital growth plan",
-      "status": "Contacted",
-      "tag": "Event",
-      "value": 5600000,
-      "secondary": "Call tomorrow",
+      "id": 202,
+      "name": "Portland Cement 50kg",
+      "meta": "SKU CEM-050 \u00b7 Building materials",
+      "status": "Low stock",
+      "tag": "Fast moving",
+      "value": 76,
+      "secondary": "76 units",
+      "priority": "High",
+      "owner": "Warehouse A"
+    },
+    {
+      "id": 203,
+      "name": "Copper Cable 6mm",
+      "meta": "SKU CAB-006 \u00b7 Electrical",
+      "status": "In stock",
+      "tag": "Electrical",
+      "value": 248,
+      "secondary": "248 units",
       "priority": "Medium",
-      "owner": "Tomi Adeyemi"
+      "owner": "Warehouse B"
+    },
+    {
+      "id": 204,
+      "name": "Safety Helmet \u2014 Yellow",
+      "meta": "SKU PPE-001 \u00b7 Safety equipment",
+      "status": "Out of stock",
+      "tag": "PPE",
+      "value": 0,
+      "secondary": "0 units",
+      "priority": "High",
+      "owner": "Warehouse B"
+    },
+    {
+      "id": 205,
+      "name": "PVC Pipe 110mm",
+      "meta": "SKU PVC-110 \u00b7 Plumbing",
+      "status": "In stock",
+      "tag": "Plumbing",
+      "value": 142,
+      "secondary": "142 units",
+      "priority": "Low",
+      "owner": "Warehouse C"
     }
   ],
   "activity": [
     {
       "label": "Jun",
-      "value": 42,
-      "note": ""
-    },
-    {
-      "label": "Jul",
-      "value": 60,
-      "note": ""
-    },
-    {
-      "label": "Aug",
-      "value": 53,
-      "note": ""
-    },
-    {
-      "label": "Sep",
-      "value": 76,
-      "note": ""
-    },
-    {
-      "label": "Oct",
       "value": 66,
       "note": ""
     },
     {
+      "label": "Jul",
+      "value": 72,
+      "note": ""
+    },
+    {
+      "label": "Aug",
+      "value": 58,
+      "note": ""
+    },
+    {
+      "label": "Sep",
+      "value": 81,
+      "note": ""
+    },
+    {
+      "label": "Oct",
+      "value": 74,
+      "note": ""
+    },
+    {
       "label": "Nov",
-      "value": 92,
+      "value": 88,
       "note": ""
     }
   ],
   "demos": [
     {
       "role": "Administrator",
-      "name": "Amara Dike",
-      "email": "admin@apexline.demo"
+      "name": "Kelechi Nwosu",
+      "email": "admin@harbourline.demo"
     },
     {
-      "role": "Sales representative",
-      "name": "Tomi Adeyemi",
-      "email": "sales@apexline.demo"
+      "role": "Warehouse manager",
+      "name": "Bisi Afolabi",
+      "email": "warehouse@harbourline.demo"
+    },
+    {
+      "role": "Staff",
+      "name": "Sani Bello",
+      "email": "staff@harbourline.demo"
     }
   ],
-  "specialTitle": "Revenue rhythm",
+  "specialTitle": "Stock movement",
   "specialCopy": "",
   "specialCards": [],
   "statusTone": {
-    "New": "info",
-    "Contacted": "neutral",
-    "Qualified": "success",
-    "Proposal Sent": "warning",
-    "Negotiation": "warning",
-    "Won": "success",
-    "Lost": "danger"
+    "In stock": "success",
+    "Low stock": "warning",
+    "Out of stock": "danger"
   }
 };
 const iconMap: Record<string, ReactNode> = {
@@ -288,6 +285,7 @@ const settingsKey = `nosyra-${config.slug}-settings`;
 const sessionKey = `nosyra-${config.slug}-session`;
 
 function loadRecords(): RecordItem[] {
+  if (typeof window === "undefined") return config.seed;
   try {
     const stored = localStorage.getItem(storageKey);
     return stored ? JSON.parse(stored) : config.seed;
@@ -297,11 +295,12 @@ function loadRecords(): RecordItem[] {
 }
 
 function loadSettings() {
+  if (typeof window === "undefined") return { companyName: config.company, primary: "#__PRIMARY__", secondary: "#__SECONDARY__", contact: "hello@nosyradigital.com" };
   try {
     const stored = localStorage.getItem(settingsKey);
-    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#0b1d3a", secondary: "#1ca6b5", contact: "hello@nosyradigital.com" };
+    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#153b35", secondary: "#d49b45", contact: "hello@nosyradigital.com" };
   } catch {
-    return { companyName: config.company, primary: "#0b1d3a", secondary: "#1ca6b5", contact: "hello@nosyradigital.com" };
+    return { companyName: config.company, primary: "#153b35", secondary: "#d49b45", contact: "hello@nosyradigital.com" };
   }
 }
 
@@ -311,10 +310,10 @@ function formatMoney(value: number) {
 
 const pathToView: Record<string, string> = { "/": "dashboard", "/login": "login", "/dashboard": "dashboard", "/reports": "reports", "/settings": "settings" };
 config.nav.forEach((item) => { pathToView[`/${item.view}`] = item.view; });
-function viewFromPath() { return pathToView[window.location.pathname] ?? "dashboard"; }
+function viewFromPath() { return typeof window === "undefined" ? "dashboard" : (pathToView[window.location.pathname] ?? "dashboard"); }
 function pathFromView(view: string) { return view === "dashboard" ? "/dashboard" : `/${view}`; }
 
-function App() {
+export default function App() {
   const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem(sessionKey) === "true" && viewFromPath() !== "login");
   const [currentView, setCurrentView] = useState(viewFromPath);
   const [records, setRecords] = useState<RecordItem[]>(loadRecords);
@@ -521,11 +520,3 @@ function RecordModal({ editing, draft, setDraft, onClose, onSave }: { editing: R
   return <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><form className="modal-card" onSubmit={onSave}><div className="modal-header"><div><p className="eyebrow">{editing ? "Edit record" : "Create record"}</p><h2>{editing ? `Update ${config.singularLabel.toLowerCase()}` : `Add a ${config.singularLabel.toLowerCase()}`}</h2></div><button className="icon-button" type="button" onClick={onClose}><X size={18} /></button></div><label>Name<input autoFocus required value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} placeholder="e.g. Meridian Estates" /></label><label>Context<input value={draft.meta} onChange={(event) => setDraft({ ...draft, meta: event.target.value })} placeholder="Short business context" /></label><label>Owner<input value={draft.owner} onChange={(event) => setDraft({ ...draft, owner: event.target.value })} placeholder="Assign a teammate" /></label><div className="modal-actions"><button className="secondary-button" type="button" onClick={onClose}>Cancel</button><button className="primary-button" type="submit">{editing ? "Save changes" : "Create record"}<ArrowRight size={15} /></button></div></form></div>;
 }
 
-function mount() {
-  const root = document.getElementById("root");
-  if (!root) throw new Error("Root element missing");
-  root.innerHTML = "";
-  createRoot(root).render(<App />);
-}
-
-mount();

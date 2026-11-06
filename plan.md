@@ -2,7 +2,7 @@
 
 ## Delivery approach
 
-This repository contains three independently deployable Vite + React + TypeScript applications. Each product lives in its own folder with its own `package.json`, source tree, public route manifest, Vercel configuration, README, API notes, and database schema notes. They do not import code from one another and can be deployed as three separate Vercel projects.
+This repository contains three independently deployable Next.js + React + TypeScript applications. Each product lives in its own folder with its own `package.json`, source tree, public route manifest, Vercel configuration, README, API notes, and database schema notes. They do not import code from one another and can be deployed as three separate Vercel projects.
 
 This first delivery is a deployable product-demo MVP for rapid testing. It implements responsive dashboard experiences, realistic demo data, local CRUD-style interactions, role/demo-account presentation, pipeline or operational workflows, reporting surfaces, white-label settings, and browser local persistence. It intentionally does not claim to include the requested PHP 8/MySQL production backend, server-enforced authentication, real file storage, or production multi-tenancy. Those backend requirements are documented as the next implementation layer in each app's README and `backend/` notes.
 
@@ -37,4 +37,4 @@ The apps use a system sans stack for reliable Vercel rendering, with uppercase e
 
 ## Build and serving
 
-Each app is a static Vercel build with `npm install` and `npm run build`, producing `dist/`. The browser-side data layer uses localStorage so testers can create and edit records without a server. A future production layer should replace the local data adapter with a PHP 8 REST API and MySQL persistence, using the per-app SQL and OpenAPI starting points included here.
+Each app is a standalone Next.js Vercel build with `npm install` and `npm run build`; Vercel handles the Next.js output and route serving. The browser-side data layer uses localStorage so testers can create and edit records without a server. A future production layer should replace the local data adapter with a PHP 8 REST API and MySQL persistence, using the per-app SQL and OpenAPI starting points included here.

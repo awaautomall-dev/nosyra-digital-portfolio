@@ -1,4 +1,5 @@
-import { createRoot } from "react-dom/client";
+"use client";
+
 import {
   Activity,
   ArrowDownToLine,
@@ -35,7 +36,6 @@ import {
   X,
 } from "lucide-react";
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
-import "./styles.css";
 
 type RecordItem = {
   id: number;
@@ -73,13 +73,13 @@ type AppConfig = {
 };
 
 const config: AppConfig = {
-  "slug": "projectflow",
-  "product": "Nosyra ProjectFlow",
-  "eyebrow": "Project & workforce management",
-  "tagline": "Keep delivery visible.",
-  "company": "Meridian Civil & Engineering",
-  "resourceLabel": "Projects & delivery",
-  "singularLabel": "project",
+  "slug": "crm",
+  "product": "Nosyra CRM",
+  "eyebrow": "Customer relationship management",
+  "tagline": "Move every relationship forward.",
+  "company": "Apexline Advisory",
+  "resourceLabel": "Leads & customers",
+  "singularLabel": "lead",
   "nav": [
     {
       "label": "Dashboard",
@@ -87,29 +87,24 @@ const config: AppConfig = {
       "icon": "dashboard"
     },
     {
-      "label": "Projects",
+      "label": "Leads",
       "view": "records",
-      "icon": "projects"
+      "icon": "records"
     },
     {
-      "label": "Tasks",
-      "view": "tasks",
-      "icon": "tasks"
+      "label": "Sales pipeline",
+      "view": "pipeline",
+      "icon": "pipeline"
     },
     {
-      "label": "Workforce",
-      "view": "workforce",
-      "icon": "workforce"
+      "label": "Customers",
+      "view": "customers",
+      "icon": "records"
     },
     {
-      "label": "Expenses",
-      "view": "expenses",
-      "icon": "expenses"
-    },
-    {
-      "label": "Client portal",
-      "view": "portal",
-      "icon": "portal"
+      "label": "Follow-ups",
+      "view": "followups",
+      "icon": "followups"
     },
     {
       "label": "Reports",
@@ -124,150 +119,151 @@ const config: AppConfig = {
   ],
   "metrics": [
     {
-      "label": "Active projects",
-      "value": "12",
-      "delta": "8.3%",
+      "label": "Total leads",
+      "value": "248",
+      "delta": "12.6%",
       "tone": "neutral"
     },
     {
-      "label": "Project budgets",
-      "value": "\u20a6284m",
-      "delta": "11.2%",
+      "label": "Pipeline value",
+      "value": "\u20a642.8m",
+      "delta": "18.4%",
       "tone": "primary"
     },
     {
-      "label": "Tasks in progress",
-      "value": "87",
-      "delta": "6.8%",
+      "label": "Won this month",
+      "value": "19",
+      "delta": "8.9%",
       "tone": "neutral"
     },
     {
-      "label": "Overdue tasks",
-      "value": "9",
-      "delta": "2.4%",
+      "label": "Follow-ups due",
+      "value": "14",
+      "delta": "5.2%",
       "tone": "neutral"
     }
   ],
   "pipeline": [
-    "Planning",
-    "In progress",
-    "At risk",
-    "Complete"
+    "New",
+    "Contacted",
+    "Qualified",
+    "Proposal Sent",
+    "Negotiation",
+    "Won",
+    "Lost"
   ],
   "seed": [
     {
-      "id": 301,
-      "name": "Eko Heights Residences",
-      "meta": "Client: Meridian Estates",
-      "status": "In progress",
-      "tag": "Construction",
-      "value": 185000000,
-      "secondary": "68% complete",
+      "id": 101,
+      "name": "Aderonke Properties",
+      "meta": "Real estate partnership",
+      "status": "Qualified",
+      "tag": "Referral",
+      "value": 18500000,
+      "secondary": "Lagos",
       "priority": "High",
-      "owner": "Ifeoma Nnadi"
+      "owner": "Amara Dike"
     },
     {
-      "id": 302,
-      "name": "Lekki Drainage Upgrade",
-      "meta": "Client: Lagos Works Bureau",
-      "status": "At risk",
-      "tag": "Infrastructure",
-      "value": 74000000,
-      "secondary": "41% complete",
+      "id": 102,
+      "name": "Kora Buildworks",
+      "meta": "Construction retainer",
+      "status": "Proposal Sent",
+      "tag": "Website",
+      "value": 12400000,
+      "secondary": "Due in 2d",
       "priority": "High",
-      "owner": "David Mensah"
+      "owner": "Tomi Adeyemi"
     },
     {
-      "id": 303,
-      "name": "Airport Logistics Hub",
-      "meta": "Client: Nuru Logistics",
-      "status": "Planning",
-      "tag": "Engineering",
-      "value": 52000000,
-      "secondary": "Brief approved",
+      "id": 103,
+      "name": "Northwind Studio",
+      "meta": "Brand transformation",
+      "status": "New",
+      "tag": "LinkedIn",
+      "value": 7200000,
+      "secondary": "Last touched 1h",
       "priority": "Medium",
-      "owner": "Ifeoma Nnadi"
+      "owner": "Amara Dike"
     },
     {
-      "id": 304,
-      "name": "Cedar Grove Offices",
-      "meta": "Client: Cedar Grove Ltd",
-      "status": "Complete",
-      "tag": "Architecture",
-      "value": 33000000,
-      "secondary": "Signed off",
+      "id": 104,
+      "name": "Mile 7 Advisory",
+      "meta": "Quarterly consulting",
+      "status": "Won",
+      "tag": "Partner",
+      "value": 8900000,
+      "secondary": "Closed Oct 30",
       "priority": "Low",
-      "owner": "Chidi Obi"
+      "owner": "Femi Okafor"
     },
     {
-      "id": 305,
-      "name": "Ikoyi Energy Retrofit",
-      "meta": "Client: Eko Facilities",
-      "status": "In progress",
-      "tag": "Retrofit",
-      "value": 46000000,
-      "secondary": "27% complete",
+      "id": 105,
+      "name": "Sable & Co.",
+      "meta": "Digital growth plan",
+      "status": "Contacted",
+      "tag": "Event",
+      "value": 5600000,
+      "secondary": "Call tomorrow",
       "priority": "Medium",
-      "owner": "David Mensah"
+      "owner": "Tomi Adeyemi"
     }
   ],
   "activity": [
     {
       "label": "Jun",
-      "value": 48,
+      "value": 42,
       "note": ""
     },
     {
       "label": "Jul",
-      "value": 58,
+      "value": 60,
       "note": ""
     },
     {
       "label": "Aug",
-      "value": 63,
+      "value": 53,
       "note": ""
     },
     {
       "label": "Sep",
-      "value": 57,
+      "value": 76,
       "note": ""
     },
     {
       "label": "Oct",
-      "value": 79,
+      "value": 66,
       "note": ""
     },
     {
       "label": "Nov",
-      "value": 87,
+      "value": 92,
       "note": ""
     }
   ],
   "demos": [
     {
       "role": "Administrator",
-      "name": "Ifeoma Nnadi",
-      "email": "admin@meridian.demo"
+      "name": "Amara Dike",
+      "email": "admin@apexline.demo"
     },
     {
-      "role": "Project manager",
-      "name": "David Mensah",
-      "email": "pm@meridian.demo"
-    },
-    {
-      "role": "Client",
-      "name": "Nura Ibrahim",
-      "email": "client@meridian.demo"
+      "role": "Sales representative",
+      "name": "Tomi Adeyemi",
+      "email": "sales@apexline.demo"
     }
   ],
-  "specialTitle": "Delivery pulse",
+  "specialTitle": "Revenue rhythm",
   "specialCopy": "",
   "specialCards": [],
   "statusTone": {
-    "Planning": "info",
-    "In progress": "success",
-    "At risk": "warning",
-    "Complete": "success"
+    "New": "info",
+    "Contacted": "neutral",
+    "Qualified": "success",
+    "Proposal Sent": "warning",
+    "Negotiation": "warning",
+    "Won": "success",
+    "Lost": "danger"
   }
 };
 const iconMap: Record<string, ReactNode> = {
@@ -292,6 +288,7 @@ const settingsKey = `nosyra-${config.slug}-settings`;
 const sessionKey = `nosyra-${config.slug}-session`;
 
 function loadRecords(): RecordItem[] {
+  if (typeof window === "undefined") return config.seed;
   try {
     const stored = localStorage.getItem(storageKey);
     return stored ? JSON.parse(stored) : config.seed;
@@ -301,11 +298,12 @@ function loadRecords(): RecordItem[] {
 }
 
 function loadSettings() {
+  if (typeof window === "undefined") return { companyName: config.company, primary: "#__PRIMARY__", secondary: "#__SECONDARY__", contact: "hello@nosyradigital.com" };
   try {
     const stored = localStorage.getItem(settingsKey);
-    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#35233f", secondary: "#69b8cb", contact: "hello@nosyradigital.com" };
+    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#0b1d3a", secondary: "#1ca6b5", contact: "hello@nosyradigital.com" };
   } catch {
-    return { companyName: config.company, primary: "#35233f", secondary: "#69b8cb", contact: "hello@nosyradigital.com" };
+    return { companyName: config.company, primary: "#0b1d3a", secondary: "#1ca6b5", contact: "hello@nosyradigital.com" };
   }
 }
 
@@ -315,10 +313,10 @@ function formatMoney(value: number) {
 
 const pathToView: Record<string, string> = { "/": "dashboard", "/login": "login", "/dashboard": "dashboard", "/reports": "reports", "/settings": "settings" };
 config.nav.forEach((item) => { pathToView[`/${item.view}`] = item.view; });
-function viewFromPath() { return pathToView[window.location.pathname] ?? "dashboard"; }
+function viewFromPath() { return typeof window === "undefined" ? "dashboard" : (pathToView[window.location.pathname] ?? "dashboard"); }
 function pathFromView(view: string) { return view === "dashboard" ? "/dashboard" : `/${view}`; }
 
-function App() {
+export default function App() {
   const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem(sessionKey) === "true" && viewFromPath() !== "login");
   const [currentView, setCurrentView] = useState(viewFromPath);
   const [records, setRecords] = useState<RecordItem[]>(loadRecords);
@@ -525,11 +523,3 @@ function RecordModal({ editing, draft, setDraft, onClose, onSave }: { editing: R
   return <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><form className="modal-card" onSubmit={onSave}><div className="modal-header"><div><p className="eyebrow">{editing ? "Edit record" : "Create record"}</p><h2>{editing ? `Update ${config.singularLabel.toLowerCase()}` : `Add a ${config.singularLabel.toLowerCase()}`}</h2></div><button className="icon-button" type="button" onClick={onClose}><X size={18} /></button></div><label>Name<input autoFocus required value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} placeholder="e.g. Meridian Estates" /></label><label>Context<input value={draft.meta} onChange={(event) => setDraft({ ...draft, meta: event.target.value })} placeholder="Short business context" /></label><label>Owner<input value={draft.owner} onChange={(event) => setDraft({ ...draft, owner: event.target.value })} placeholder="Assign a teammate" /></label><div className="modal-actions"><button className="secondary-button" type="button" onClick={onClose}>Cancel</button><button className="primary-button" type="submit">{editing ? "Save changes" : "Create record"}<ArrowRight size={15} /></button></div></form></div>;
 }
 
-function mount() {
-  const root = document.getElementById("root");
-  if (!root) throw new Error("Root element missing");
-  root.innerHTML = "";
-  createRoot(root).render(<App />);
-}
-
-mount();

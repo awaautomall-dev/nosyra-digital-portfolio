@@ -11,7 +11,7 @@ npm run dev
 
 ## Deploy to Vercel
 
-Import the repository into Vercel and set the project root directory to `apps/inventory`. Use `npm run build` and `dist` if Vercel does not auto-detect the Vite defaults.
+Import the repository into Vercel and set the project root directory to `apps/inventory`. Use `npm run build` and `dist` if Vercel does not auto-detect the Next.js defaults.
 
 ## Demo access
 

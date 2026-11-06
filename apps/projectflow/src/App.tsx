@@ -1,4 +1,5 @@
-import { createRoot } from "react-dom/client";
+"use client";
+
 import {
   Activity,
   ArrowDownToLine,
@@ -35,7 +36,6 @@ import {
   X,
 } from "lucide-react";
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
-import "./styles.css";
 
 type RecordItem = {
   id: number;
@@ -73,13 +73,13 @@ type AppConfig = {
 };
 
 const config: AppConfig = {
-  "slug": "inventory",
-  "product": "Nosyra Inventory",
-  "eyebrow": "Inventory & warehouse operations",
-  "tagline": "Protect stock. Keep trade moving.",
-  "company": "Harbourline Distribution",
-  "resourceLabel": "Products & stock",
-  "singularLabel": "product",
+  "slug": "projectflow",
+  "product": "Nosyra ProjectFlow",
+  "eyebrow": "Project & workforce management",
+  "tagline": "Keep delivery visible.",
+  "company": "Meridian Civil & Engineering",
+  "resourceLabel": "Projects & delivery",
+  "singularLabel": "project",
   "nav": [
     {
       "label": "Dashboard",
@@ -87,24 +87,29 @@ const config: AppConfig = {
       "icon": "dashboard"
     },
     {
-      "label": "Products",
+      "label": "Projects",
       "view": "records",
-      "icon": "records"
+      "icon": "projects"
     },
     {
-      "label": "Stock movement",
-      "view": "stock",
-      "icon": "stock"
+      "label": "Tasks",
+      "view": "tasks",
+      "icon": "tasks"
     },
     {
-      "label": "Suppliers",
-      "view": "suppliers",
-      "icon": "suppliers"
+      "label": "Workforce",
+      "view": "workforce",
+      "icon": "workforce"
     },
     {
-      "label": "Purchase orders",
-      "view": "purchases",
-      "icon": "purchases"
+      "label": "Expenses",
+      "view": "expenses",
+      "icon": "expenses"
+    },
+    {
+      "label": "Client portal",
+      "view": "portal",
+      "icon": "portal"
     },
     {
       "label": "Reports",
@@ -119,148 +124,150 @@ const config: AppConfig = {
   ],
   "metrics": [
     {
-      "label": "Total products",
-      "value": "1,284",
-      "delta": "4.2%",
+      "label": "Active projects",
+      "value": "12",
+      "delta": "8.3%",
       "tone": "neutral"
     },
     {
-      "label": "Stock value",
-      "value": "\u20a668.4m",
-      "delta": "9.8%",
+      "label": "Project budgets",
+      "value": "\u20a6284m",
+      "delta": "11.2%",
       "tone": "primary"
     },
     {
-      "label": "Low-stock items",
-      "value": "36",
-      "delta": "3.1%",
+      "label": "Tasks in progress",
+      "value": "87",
+      "delta": "6.8%",
       "tone": "neutral"
     },
     {
-      "label": "Open POs",
-      "value": "18",
-      "delta": "6.4%",
+      "label": "Overdue tasks",
+      "value": "9",
+      "delta": "2.4%",
       "tone": "neutral"
     }
   ],
   "pipeline": [
-    "In stock",
-    "Low stock",
-    "Out of stock"
+    "Planning",
+    "In progress",
+    "At risk",
+    "Complete"
   ],
   "seed": [
     {
-      "id": 201,
-      "name": "14mm Reinforcement Bar",
-      "meta": "SKU RBR-014 \u00b7 Steel",
-      "status": "In stock",
+      "id": 301,
+      "name": "Eko Heights Residences",
+      "meta": "Client: Meridian Estates",
+      "status": "In progress",
       "tag": "Construction",
-      "value": 380,
-      "secondary": "380 units",
-      "priority": "Low",
-      "owner": "Warehouse A"
-    },
-    {
-      "id": 202,
-      "name": "Portland Cement 50kg",
-      "meta": "SKU CEM-050 \u00b7 Building materials",
-      "status": "Low stock",
-      "tag": "Fast moving",
-      "value": 76,
-      "secondary": "76 units",
+      "value": 185000000,
+      "secondary": "68% complete",
       "priority": "High",
-      "owner": "Warehouse A"
+      "owner": "Ifeoma Nnadi"
     },
     {
-      "id": 203,
-      "name": "Copper Cable 6mm",
-      "meta": "SKU CAB-006 \u00b7 Electrical",
-      "status": "In stock",
-      "tag": "Electrical",
-      "value": 248,
-      "secondary": "248 units",
+      "id": 302,
+      "name": "Lekki Drainage Upgrade",
+      "meta": "Client: Lagos Works Bureau",
+      "status": "At risk",
+      "tag": "Infrastructure",
+      "value": 74000000,
+      "secondary": "41% complete",
+      "priority": "High",
+      "owner": "David Mensah"
+    },
+    {
+      "id": 303,
+      "name": "Airport Logistics Hub",
+      "meta": "Client: Nuru Logistics",
+      "status": "Planning",
+      "tag": "Engineering",
+      "value": 52000000,
+      "secondary": "Brief approved",
       "priority": "Medium",
-      "owner": "Warehouse B"
+      "owner": "Ifeoma Nnadi"
     },
     {
-      "id": 204,
-      "name": "Safety Helmet \u2014 Yellow",
-      "meta": "SKU PPE-001 \u00b7 Safety equipment",
-      "status": "Out of stock",
-      "tag": "PPE",
-      "value": 0,
-      "secondary": "0 units",
-      "priority": "High",
-      "owner": "Warehouse B"
-    },
-    {
-      "id": 205,
-      "name": "PVC Pipe 110mm",
-      "meta": "SKU PVC-110 \u00b7 Plumbing",
-      "status": "In stock",
-      "tag": "Plumbing",
-      "value": 142,
-      "secondary": "142 units",
+      "id": 304,
+      "name": "Cedar Grove Offices",
+      "meta": "Client: Cedar Grove Ltd",
+      "status": "Complete",
+      "tag": "Architecture",
+      "value": 33000000,
+      "secondary": "Signed off",
       "priority": "Low",
-      "owner": "Warehouse C"
+      "owner": "Chidi Obi"
+    },
+    {
+      "id": 305,
+      "name": "Ikoyi Energy Retrofit",
+      "meta": "Client: Eko Facilities",
+      "status": "In progress",
+      "tag": "Retrofit",
+      "value": 46000000,
+      "secondary": "27% complete",
+      "priority": "Medium",
+      "owner": "David Mensah"
     }
   ],
   "activity": [
     {
       "label": "Jun",
-      "value": 66,
+      "value": 48,
       "note": ""
     },
     {
       "label": "Jul",
-      "value": 72,
-      "note": ""
-    },
-    {
-      "label": "Aug",
       "value": 58,
       "note": ""
     },
     {
+      "label": "Aug",
+      "value": 63,
+      "note": ""
+    },
+    {
       "label": "Sep",
-      "value": 81,
+      "value": 57,
       "note": ""
     },
     {
       "label": "Oct",
-      "value": 74,
+      "value": 79,
       "note": ""
     },
     {
       "label": "Nov",
-      "value": 88,
+      "value": 87,
       "note": ""
     }
   ],
   "demos": [
     {
       "role": "Administrator",
-      "name": "Kelechi Nwosu",
-      "email": "admin@harbourline.demo"
+      "name": "Ifeoma Nnadi",
+      "email": "admin@meridian.demo"
     },
     {
-      "role": "Warehouse manager",
-      "name": "Bisi Afolabi",
-      "email": "warehouse@harbourline.demo"
+      "role": "Project manager",
+      "name": "David Mensah",
+      "email": "pm@meridian.demo"
     },
     {
-      "role": "Staff",
-      "name": "Sani Bello",
-      "email": "staff@harbourline.demo"
+      "role": "Client",
+      "name": "Nura Ibrahim",
+      "email": "client@meridian.demo"
     }
   ],
-  "specialTitle": "Stock movement",
+  "specialTitle": "Delivery pulse",
   "specialCopy": "",
   "specialCards": [],
   "statusTone": {
-    "In stock": "success",
-    "Low stock": "warning",
-    "Out of stock": "danger"
+    "Planning": "info",
+    "In progress": "success",
+    "At risk": "warning",
+    "Complete": "success"
   }
 };
 const iconMap: Record<string, ReactNode> = {
@@ -285,6 +292,7 @@ const settingsKey = `nosyra-${config.slug}-settings`;
 const sessionKey = `nosyra-${config.slug}-session`;
 
 function loadRecords(): RecordItem[] {
+  if (typeof window === "undefined") return config.seed;
   try {
     const stored = localStorage.getItem(storageKey);
     return stored ? JSON.parse(stored) : config.seed;
@@ -294,11 +302,12 @@ function loadRecords(): RecordItem[] {
 }
 
 function loadSettings() {
+  if (typeof window === "undefined") return { companyName: config.company, primary: "#__PRIMARY__", secondary: "#__SECONDARY__", contact: "hello@nosyradigital.com" };
   try {
     const stored = localStorage.getItem(settingsKey);
-    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#153b35", secondary: "#d49b45", contact: "hello@nosyradigital.com" };
+    return stored ? JSON.parse(stored) : { companyName: config.company, primary: "#35233f", secondary: "#69b8cb", contact: "hello@nosyradigital.com" };
   } catch {
-    return { companyName: config.company, primary: "#153b35", secondary: "#d49b45", contact: "hello@nosyradigital.com" };
+    return { companyName: config.company, primary: "#35233f", secondary: "#69b8cb", contact: "hello@nosyradigital.com" };
   }
 }
 
@@ -308,10 +317,10 @@ function formatMoney(value: number) {
 
 const pathToView: Record<string, string> = { "/": "dashboard", "/login": "login", "/dashboard": "dashboard", "/reports": "reports", "/settings": "settings" };
 config.nav.forEach((item) => { pathToView[`/${item.view}`] = item.view; });
-function viewFromPath() { return pathToView[window.location.pathname] ?? "dashboard"; }
+function viewFromPath() { return typeof window === "undefined" ? "dashboard" : (pathToView[window.location.pathname] ?? "dashboard"); }
 function pathFromView(view: string) { return view === "dashboard" ? "/dashboard" : `/${view}`; }
 
-function App() {
+export default function App() {
   const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem(sessionKey) === "true" && viewFromPath() !== "login");
   const [currentView, setCurrentView] = useState(viewFromPath);
   const [records, setRecords] = useState<RecordItem[]>(loadRecords);
@@ -518,11 +527,3 @@ function RecordModal({ editing, draft, setDraft, onClose, onSave }: { editing: R
   return <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><form className="modal-card" onSubmit={onSave}><div className="modal-header"><div><p className="eyebrow">{editing ? "Edit record" : "Create record"}</p><h2>{editing ? `Update ${config.singularLabel.toLowerCase()}` : `Add a ${config.singularLabel.toLowerCase()}`}</h2></div><button className="icon-button" type="button" onClick={onClose}><X size={18} /></button></div><label>Name<input autoFocus required value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} placeholder="e.g. Meridian Estates" /></label><label>Context<input value={draft.meta} onChange={(event) => setDraft({ ...draft, meta: event.target.value })} placeholder="Short business context" /></label><label>Owner<input value={draft.owner} onChange={(event) => setDraft({ ...draft, owner: event.target.value })} placeholder="Assign a teammate" /></label><div className="modal-actions"><button className="secondary-button" type="button" onClick={onClose}>Cancel</button><button className="primary-button" type="submit">{editing ? "Save changes" : "Create record"}<ArrowRight size={15} /></button></div></form></div>;
 }
 
-function mount() {
-  const root = document.getElementById("root");
-  if (!root) throw new Error("Root element missing");
-  root.innerHTML = "";
-  createRoot(root).render(<App />);
-}
-
-mount();

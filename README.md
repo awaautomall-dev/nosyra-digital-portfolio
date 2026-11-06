@@ -1,6 +1,6 @@
 # Nosyra Digital Business Software Portfolio
 
-This repository contains three independent, mobile-responsive React demo applications for Nosyra Digital:
+This repository contains three independent, mobile-responsive Next.js demo applications for Nosyra Digital:
 
 - `apps/crm` — Nosyra CRM
 - `apps/inventory` — Nosyra Inventory
@@ -17,7 +17,7 @@ npm install --prefix apps/projectflow
 npm run build
 ```
 
-For interactive development, run `npm --prefix apps/crm run dev` (or the equivalent app folder) and open the Vite URL.
+For interactive development, run `npm --prefix apps/crm run dev` (or the equivalent app folder) and open the Next.js URL.
 
 ## Deploy each app to Vercel
 
@@ -27,7 +27,7 @@ Create three Vercel projects from this repository. For each project, select the 
 2. `apps/inventory`
 3. `apps/projectflow`
 
-Vercel should detect Vite automatically. Use `npm run build` as the build command and `dist` as the output directory if prompted. No environment variables are required for this browser-only testing build.
+Vercel should detect Vite automatically. Use `npm run build`; Vercel should detect the Next.js runtime automatically. No environment variables are required for this browser-only testing build.
 
 ## Testing-build boundary
 
