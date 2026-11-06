@@ -311,10 +311,15 @@ function formatMoney(value: number) {
   return new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
 }
 
+const servicePrefix = "/crm";
 const pathToView: Record<string, string> = { "/": "dashboard", "/login": "login", "/dashboard": "dashboard", "/reports": "reports", "/settings": "settings" };
 config.nav.forEach((item) => { pathToView[`/${item.view}`] = item.view; });
-function viewFromPath() { return typeof window === "undefined" ? "dashboard" : (pathToView[window.location.pathname] ?? "dashboard"); }
-function pathFromView(view: string) { return view === "dashboard" ? "/dashboard" : `/${view}`; }
+function viewFromPath() {
+  if (typeof window === "undefined") return "dashboard";
+  const pathname = window.location.pathname.startsWith(servicePrefix) ? window.location.pathname.slice(servicePrefix.length) || "/" : window.location.pathname;
+  return pathToView[pathname] ?? "dashboard";
+}
+function pathFromView(view: string) { return `${window.location.pathname.startsWith(servicePrefix) ? servicePrefix : ""}${view === "dashboard" ? "/dashboard" : `/${view}`}`; }
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem(sessionKey) === "true" && viewFromPath() !== "login");

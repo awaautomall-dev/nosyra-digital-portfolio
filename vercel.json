@@ -1,0 +1,28 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "crm": {
+      "root": "apps/crm",
+      "framework": "nextjs",
+      "buildCommand": "npm run build"
+    },
+    "inventory": {
+      "root": "apps/inventory",
+      "framework": "nextjs",
+      "buildCommand": "npm run build"
+    },
+    "projectflow": {
+      "root": "apps/projectflow",
+      "framework": "nextjs",
+      "buildCommand": "npm run build"
+    }
+  },
+  "rewrites": [
+    { "source": "/crm", "destination": { "service": "crm" } },
+    { "source": "/crm/(.*)", "destination": { "service": "crm" } },
+    { "source": "/inventory", "destination": { "service": "inventory" } },
+    { "source": "/inventory/(.*)", "destination": { "service": "inventory" } },
+    { "source": "/projectflow", "destination": { "service": "projectflow" } },
+    { "source": "/projectflow/(.*)", "destination": { "service": "projectflow" } }
+  ]
+}
