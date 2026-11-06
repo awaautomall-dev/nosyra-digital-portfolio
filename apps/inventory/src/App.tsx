@@ -319,7 +319,7 @@ function viewFromPath() {
 function pathFromView(view: string) { return `${window.location.pathname.startsWith(servicePrefix) ? servicePrefix : ""}${view === "dashboard" ? "/dashboard" : `/${view}`}`; }
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem(sessionKey) === "true" && viewFromPath() !== "login");
+  const [loggedIn, setLoggedIn] = useState(false);
   const [currentView, setCurrentView] = useState(viewFromPath);
   const [records, setRecords] = useState<RecordItem[]>(loadRecords);
   const [settings, setSettings] = useState(loadSettings);
@@ -329,6 +329,10 @@ export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<RecordItem | null>(null);
   const [draft, setDraft] = useState({ name: "", meta: "", owner: "" });
+
+  useEffect(() => {
+    setLoggedIn(localStorage.getItem(sessionKey) === "true" && viewFromPath() !== "login");
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => setCurrentView(viewFromPath());
@@ -440,8 +444,8 @@ export default function App() {
     <div className="app-shell">
       <aside className={`sidebar ${mobileOpen ? "is-open" : ""}`}>
         <div className="brand-lockup">
-          <div className="brand-mark">N</div>
-          <div><strong>{config.product}</strong><span>by Nosyra Digital</span></div>
+          <img className="brand-logo" src="/inventory/nosyra-logo.png" alt="Nosyra Digital logo" />
+          <div className="brand-product"><strong>{config.product}</strong><a href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">Websites that convert</a></div>
         </div>
         <div className="workspace-switcher"><span className="status-dot" />{settings.companyName}<ChevronDown size={15} /></div>
         <nav className="primary-nav">
@@ -481,7 +485,7 @@ export default function App() {
 function Login({ onLogin }: { onLogin: (role?: string) => void }) {
   const [email, setEmail] = useState(config.demos[0].email);
   const [password, setPassword] = useState("demo-password");
-  return <div className="login-shell"><div className="login-art"><div className="login-art-top"><div className="brand-mark">N</div><span>Nosyra Digital</span></div><div className="art-copy"><p className="eyebrow">{config.eyebrow}</p><h1>{config.tagline}</h1><p>One focused workspace for teams who want the next action to be obvious.</p></div><div className="art-stat"><span>Demo environment</span><strong>{config.company}</strong><small>Fictional records · safe for client walkthroughs</small></div></div><div className="login-panel"><div className="login-card"><p className="eyebrow">Secure workspace access</p><h2>Sign in to {config.product}</h2><p className="muted">Use a demo identity below to explore the product.</p><form onSubmit={(event) => { event.preventDefault(); onLogin("Demo administrator"); }}><label>Work email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label><button className="primary-button full-width" type="submit">Enter demo workspace <ArrowRight size={16} /></button></form><div className="demo-access"><div className="section-kicker"><span>Demo access</span><span className="mini-badge">No real data</span></div>{config.demos.map((demo) => <button className="demo-row" key={demo.role} onClick={() => { setEmail(demo.email); onLogin(demo.role); }}><div className="avatar">{demo.name.split(" ").map((word) => word[0]).join("")}</div><div><strong>{demo.role}</strong><span>{demo.name} · {demo.email}</span></div><ArrowRight size={15} /></button>)}</div><p className="login-footnote">Testing build: changes are stored in this browser only.</p></div></div></div>;
+  return <div className="login-shell"><div className="login-art"><div className="login-art-top"><img className="login-brand-logo" src="/inventory/nosyra-logo.png" alt="Nosyra Digital logo" /><a className="login-brand-link" href="https://www.nosyradigital.com.ng/" target="_blank" rel="noreferrer">nosyradigital.com.ng</a></div><div className="art-copy"><p className="eyebrow">{config.eyebrow}</p><h1>{config.tagline}</h1><p>One focused workspace for teams who want the next action to be obvious.</p></div><div className="art-stat"><span>Demo environment</span><strong>{config.company}</strong><small>Fictional records · safe for client walkthroughs</small></div></div><div className="login-panel"><div className="login-card"><p className="eyebrow">Secure workspace access</p><h2>Sign in to {config.product}</h2><p className="muted">Use a demo identity below to explore the product.</p><form onSubmit={(event) => { event.preventDefault(); onLogin("Demo administrator"); }}><label>Work email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label><button className="primary-button full-width" type="submit">Enter demo workspace <ArrowRight size={16} /></button></form><div className="demo-access"><div className="section-kicker"><span>Demo access</span><span className="mini-badge">No real data</span></div>{config.demos.map((demo) => <button className="demo-row" key={demo.role} onClick={() => { setEmail(demo.email); onLogin(demo.role); }}><div className="avatar">{demo.name.split(" ").map((word) => word[0]).join("")}</div><div><strong>{demo.role}</strong><span>{demo.name} · {demo.email}</span></div><ArrowRight size={15} /></button>)}</div><p className="login-footnote">Testing build: changes are stored in this browser only.</p></div></div></div>;
 }
 
 function PageHeader({ eyebrow, title, copy, action, onAction }: { eyebrow: string; title: string; copy: string; action?: string; onAction?: () => void }) {
@@ -524,4 +528,3 @@ function Settings({ settings, setSettings, onSave }: { settings: any; setSetting
 function RecordModal({ editing, draft, setDraft, onClose, onSave }: { editing: RecordItem | null; draft: { name: string; meta: string; owner: string }; setDraft: (draft: { name: string; meta: string; owner: string }) => void; onClose: () => void; onSave: (event: FormEvent) => void }) {
   return <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><form className="modal-card" onSubmit={onSave}><div className="modal-header"><div><p className="eyebrow">{editing ? "Edit record" : "Create record"}</p><h2>{editing ? `Update ${config.singularLabel.toLowerCase()}` : `Add a ${config.singularLabel.toLowerCase()}`}</h2></div><button className="icon-button" type="button" onClick={onClose}><X size={18} /></button></div><label>Name<input autoFocus required value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} placeholder="e.g. Meridian Estates" /></label><label>Context<input value={draft.meta} onChange={(event) => setDraft({ ...draft, meta: event.target.value })} placeholder="Short business context" /></label><label>Owner<input value={draft.owner} onChange={(event) => setDraft({ ...draft, owner: event.target.value })} placeholder="Assign a teammate" /></label><div className="modal-actions"><button className="secondary-button" type="button" onClick={onClose}>Cancel</button><button className="primary-button" type="submit">{editing ? "Save changes" : "Create record"}<ArrowRight size={15} /></button></div></form></div>;
 }
-

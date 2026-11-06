@@ -25,7 +25,11 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .app-shell { min-height: 100vh; display: flex; }
 .sidebar { width: 258px; flex: 0 0 258px; background: var(--custom-primary); color: #eaf5f5; padding: 24px 16px 18px; display: flex; flex-direction: column; gap: 22px; min-height: 100vh; }
 .brand-lockup { display: flex; gap: 11px; align-items: center; padding: 0 8px; }
+.brand-logo { width: 90px; height: auto; flex: 0 0 auto; }
+.brand-product { min-width: 0; }
 .brand-lockup strong { display: block; font-size: 15px; letter-spacing: -.02em; }
+.brand-product a { display: block; color: rgba(255,255,255,.58); font-size: 10px; margin-top: 3px; text-decoration: none; }
+.brand-product a:hover { color: #fff; text-decoration: underline; }
 .brand-lockup span { display: block; color: rgba(255,255,255,.58); font-size: 10px; margin-top: 3px; }
 .brand-mark { width: 33px; height: 33px; border-radius: 10px; display: grid; place-items: center; color: var(--custom-primary); background: #fff; font-weight: 900; letter-spacing: -.1em; }
 .workspace-switcher { display: flex; gap: 8px; align-items: center; border: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.82); border-radius: 10px; padding: 10px 11px; font-size: 12px; }
@@ -252,6 +256,9 @@ h3 { font-size: 15px; letter-spacing: -.02em; }
 .login-art::after { content: ""; position: absolute; width: 480px; height: 480px; border-radius: 50%; border: 1px solid rgba(255,255,255,.12); right: -210px; bottom: -180px; box-shadow: 0 0 0 42px rgba(255,255,255,.03), 0 0 0 85px rgba(255,255,255,.025); }
 .login-art-top { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; }
 .login-art-top .brand-mark { color: var(--brand-primary); background: #fff; }
+.login-art-top .login-brand-logo { width: 150px; height: auto; }
+.login-art-top .login-brand-link { margin-left: auto; color: rgba(255,255,255,.72); font-size: 11px; font-weight: 600; text-decoration: none; }
+.login-art-top .login-brand-link:hover { color: #fff; text-decoration: underline; }
 .art-copy { margin: auto 0; position: relative; z-index: 1; max-width: 490px; }
 .art-copy .eyebrow { color: var(--brand-secondary); }
 .art-copy h1 { font-size: clamp(38px, 5vw, 66px); color: #fff; max-width: 530px; margin-bottom: 18px; }
