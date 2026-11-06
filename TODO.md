@@ -1,5 +1,9 @@
 # Nosyra Digital Portfolio — Delivery TODO
 
+## Current request
+
+- [x] Create a branded landing page at `/` with links to the CRM (`/crm`), Inventory (`/inventory`), and ProjectFlow (`/projectflow`) workspaces. Use the shared Nosyra navy/teal team colors across all four services, show a white logo on dark surfaces and the original logo on light surfaces, and provide a mobile bottom bar with four icon tabs (Dashboard, the main module, Reports, and More) so remaining pages are available under More. All four production builds pass.
+
 ## Completed in this testing build
 
 - [x] Three separate application directories exist: `apps/crm`, `apps/inventory`, and `apps/projectflow`; each has its own source, package manifest, build config, README, database notes, API notes, and Vercel config.
